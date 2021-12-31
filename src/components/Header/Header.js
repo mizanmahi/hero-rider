@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import { Button, Container, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 const HeaderWrapper = styled('header')(({ theme }) => ({
    background: '#f7f7f7',
@@ -22,6 +23,8 @@ const Nav = styled('nav')(({ theme }) => ({
 }));
 
 const Header = () => {
+   const { user, logoutUser } = useAuth();
+
    return (
       <HeaderWrapper>
          <Container maxWidth='lg'>
@@ -42,9 +45,29 @@ const Header = () => {
                </Link>
 
                <Nav>
-                  <Link to='/login' style={{ textDecoration: 'none' }}>
-                     <Button variant='contained'>Login</Button>
-                  </Link>
+                  {user && (
+                     <Button
+                        component={Link}
+                        to='/profile'
+                        variant='contained'
+                        sx={{ mr: 2 }}
+                     >
+                        My Profile
+                     </Button>
+                  )}
+                  {user ? (
+                     <Button
+                        variant='contained'
+                        color='error'
+                        onClick={logoutUser}
+                     >
+                        Logout
+                     </Button>
+                  ) : (
+                     <Button component={Link} to='/login' variant='contained'>
+                        Login
+                     </Button>
+                  )}
                </Nav>
             </HeaderBox>
          </Container>

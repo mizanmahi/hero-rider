@@ -25,10 +25,10 @@ const Intro = () => {
                <Grid container spacing={5} sx={{ alignItems: 'center' }}>
                   <Grid item md={6}>
                      <Box>
-                        <Typography variant='h3'>
+                        <Typography variant='h3' gutterBottom fontWeight={600}>
                            Country's Number 1 <br /> Ride Sharing Platform
                         </Typography>
-                        <Typography variant='body1'>
+                        <Typography variant='h5' color='gray'>
                            All solution in one app
                         </Typography>
                         <ButtonBox>
@@ -44,7 +44,7 @@ const Intro = () => {
 
                            <Button
                               component={Link}
-                              to='/login'
+                              to='/learnerSignUp'
                               variant='outlined'
                               startIcon={<ArrowRightAltIcon />}
                            >

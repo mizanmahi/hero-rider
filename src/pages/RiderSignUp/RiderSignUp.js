@@ -9,7 +9,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useForm } from 'react-hook-form';
-import {useAuth} from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const Input = styled('input')({
@@ -20,6 +20,10 @@ const RiderSignUpWrapper = styled('div')(({ theme }) => ({}));
 
 const Form = styled('form')(({ theme }) => ({
    margin: '2.5rem 0',
+   background: '#f7f7f7',
+   padding: theme.spacing(4),
+   boxShadow: theme.shadows[2],
+   borderRadius: theme.spacing(1),
 }));
 
 const InfoBox = styled(Box)(({ theme }) => ({
@@ -32,7 +36,6 @@ const InputField = styled(TextField)(({ theme }) => ({
 }));
 
 const RiderSignUp = () => {
-
    const [vehicleType, setVehicleType] = useState('bike');
    const {
       register,
@@ -43,9 +46,27 @@ const RiderSignUp = () => {
    const { joinWIthEmailAndPassword } = useAuth();
    const navigate = useNavigate();
 
-   const submitHandler = (formData) => {
-      const userData = { ...formData, vehicleType };
-      joinWIthEmailAndPassword(userData, navigate);
+   const submitHandler = (inputData) => {
+      const userData = { ...inputData, vehicleType, type: 'rider' };
+
+      // creating form data
+      const formData = new FormData();
+      formData.append('userName', inputData.userName);
+      formData.append('userEmail', inputData.userEmail);
+      formData.append('userAge', inputData.userAge);
+      formData.append('userPhone', inputData.userPhone);
+      formData.append('carName', inputData.carName);
+      formData.append('carNumber', inputData.carNumber);
+      formData.append('numberPalate', inputData.numberPalate);
+      formData.append('workingArea', inputData.workingArea);
+      formData.append('userProfileImage', inputData.userProfileImage[0]);
+      formData.append('userNidImage', inputData.userNidImage[0]);
+      formData.append('userLicenseImage', inputData.userLicenseImage[0]);
+      formData.append('vehicleType', vehicleType);
+      formData.append('createdAt', new Date().toLocaleDateString());
+      formData.append('type', 'rider');
+
+      joinWIthEmailAndPassword(userData, formData, navigate);
    };
 
    console.log({ errors });
@@ -332,6 +353,7 @@ const RiderSignUp = () => {
                            label='Confirm Password'
                            fullWidth
                            size='small'
+                           type='password'
                            {...register('confirmPassword', {
                               required: {
                                  value: true,
@@ -348,7 +370,8 @@ const RiderSignUp = () => {
                      <Grid item md={4}>
                         <Typography variant='body1'>Vehicle Type</Typography>
                         <Typography variant='body2' color='gray'>
-                           Choose a vehicle type.
+                           Choose a vehicle type. Default to bike but you can
+                           choose other option.
                         </Typography>
                      </Grid>
                      <Grid item md={8}>
@@ -382,7 +405,7 @@ const RiderSignUp = () => {
                   sx={{ marginLeft: 'auto', display: 'block' }}
                   type='submit'
                >
-                  Register
+                  Join
                </Button>
             </Form>
          </Container>
