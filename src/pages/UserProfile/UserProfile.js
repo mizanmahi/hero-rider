@@ -35,6 +35,7 @@ const UserProfile = () => {
    const { user } = useAuth();
    const [profileData, setProfileData] = useState({});
    const [isLoading, setIsLoading] = useState(true);
+   const [packages, setPackages] = useState([]);
 
    useEffect(() => {
       axiosInstance.get(`/userProfile/${user.email}`).then(({ data }) => {
@@ -43,6 +44,14 @@ const UserProfile = () => {
          setIsLoading(false);
       });
    }, [user?.email]);
+
+   useEffect(() => {
+      axiosInstance.get(`/packages`).then(({ data }) => {
+         setPackages(data);
+      });
+   }, []);
+
+   console.log(packages);
 
    return (
       <div>
@@ -216,78 +225,55 @@ const UserProfile = () => {
 
                   <>
                      <Grid container spacing={2}>
-                        <Grid item xs={12} md={6}>
-                           <Card sx={{ maxWidth: 345, mx: 'auto' }}>
-                              <CardMedia
-                                 component='img'
-                                 height='190'
-                                 image='https://i.ibb.co/d7Y9vk3/ride-unlimited-jenny-ogrady-dave-logan.jpg'
-                                 alt='green iguana'
-                              />
-                              <CardContent>
-                                 <Typography
-                                    gutterBottom
-                                    variant='h5'
-                                    component='div'
-                                 >
-                                    Learn Bike Riding
-                                 </Typography>
-                                 <Typography
-                                    variant='body2'
-                                    color='text.secondary'
-                                 >
-                                    Learn bike riding effectively with our pro
-                                    riders of the globe.
-                                 </Typography>
-                              </CardContent>
-                              <CardActions sx={{ p: 2 }}>
-                                 <Button>Price: 100$</Button>
-                                 <Button size='small' variant='contained'>
-                                    Enroll
-                                 </Button>
-                              </CardActions>
-                           </Card>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                           <Card sx={{ maxWidth: 345, mx: 'auto' }}>
-                              <CardMedia
-                                 component='img'
-                                 height='190'
-                                 image='https://i.ibb.co/Rhh113F/The-ideal-length-of-a-driving-lesson.jpg'
-                                 alt='green iguana'
-                              />
-                              <CardContent>
-                                 <Typography
-                                    gutterBottom
-                                    variant='h5'
-                                    component='div'
-                                 >
-                                    Learn car driving
-                                 </Typography>
-                                 <Typography
-                                    variant='body2'
-                                    color='text.secondary'
-                                 >
-                                    Learn car driving effectively with
-                                    international drivers around the world
-                                 </Typography>
-                              </CardContent>
-                              <CardActions sx={{ p: 2 }}>
-                                 <Button>Price: 200$</Button>
-
-                                 <Button size='small' variant='contained'>
-                                    Enroll
-                                 </Button>
-                              </CardActions>
-                           </Card>
-                        </Grid>
+                        {packages.length > 0 &&
+                           packages.map(
+                              (
+                                 { packageName, description, price, imageUrl },
+                                 index
+                              ) => (
+                                 <Grid key={index} item xs={12} md={6}>
+                                    <Card sx={{ maxWidth: 345, mx: 'auto' }}>
+                                       <CardMedia
+                                          component='img'
+                                          height='190'
+                                          image={imageUrl}
+                                          alt='green iguana'
+                                       />
+                                       <CardContent>
+                                          <Typography
+                                             gutterBottom
+                                             variant='h5'
+                                             component='div'
+                                          >
+                                             {packageName}
+                                          </Typography>
+                                          <Typography
+                                             variant='body2'
+                                             color='text.secondary'
+                                          >
+                                             {description}
+                                          </Typography>
+                                       </CardContent>
+                                       <CardActions sx={{ p: 2 }}>
+                                          <Button>{price}$</Button>
+                                          <Button
+                                             size='small'
+                                             variant='contained'
+                                          >
+                                             Enroll
+                                          </Button>
+                                       </CardActions>
+                                    </Card>
+                                 </Grid>
+                              )
+                           )}
                      </Grid>
                   </>
                </Box>
             )}
 
             {profileData.type === 'rider' && (
-               <Box sx={{p: 3, background: '#f7f7f7', my: 5}}>
+               <Box sx={{ p: 3, background: '#f7f7f7', my: 5 }}>
                   <Typography variant='h5'>No Packages For Riders</Typography>
                </Box>
             )}
@@ -297,22 +283,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
-/* 
-NumberPalate: "undefined"
-carName: "Hero"
-carNumber: "2021"
-createdAt: "1/1/2022"
-images:
-licenseImage: "iVBORw0KGgoAAAANSUhEUgAAA1wAAAJeCAYAAACgWgR7AABEq
-nidImage: "iVBORw0KGgoAAAANSUhEUgAAAIcAAAChCAYAAADtEqwhAAAAC
-profileImage: "/9j/4Rc/RXhpZgAATU0AKgAAAAgADwEAAAMAAAABAbUAAAEBA
-[[Prototype]]: Object
-type: "rider"
-userAge: "25"
-userEmail: "mizanmahi28@gmail.com"
-userName: "miraz"
-userPhone: "01620705755"
-vehicleType: "truck"
-workingArea: "Bansree"
-_id: "61cf630f04123c2df15a555d" */
